@@ -2,7 +2,6 @@ import collections
 import torch
 import itertools
 import numpy as np
-import random
 
 from lm_eval.utils import positional_deprecated, run_task_tests
 import lm_eval.metrics
@@ -15,6 +14,7 @@ from chatlm import ChatLM
 import tasks as ta
 import gc
 import torch
+import secrets
 
 @positional_deprecated
 def simple_evaluate(
@@ -69,7 +69,7 @@ def simple_evaluate(
     :return
         Dictionary of results
     """
-    random.seed(1234)
+    secrets.SystemRandom().seed(1234)
     np.random.seed(1234)
 
     assert len(tasks) != 0, "No tasks specified"
@@ -226,7 +226,7 @@ def evaluate(
 
         # deterministically shuffle docs and chop off the first `limit` because sometimes docs are in some kind of order
         task_docs = list(task_doc_func())
-        rnd = random.Random()
+        rnd = secrets.SystemRandom().Random()
         rnd.seed(42)
         rnd.shuffle(task_docs)
         print(f"Task: {task_name}; number of docs: {len(task_docs)}")
